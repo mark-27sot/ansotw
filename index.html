@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Answer | Desarrollo de microapps, apps móviles, web y software</title>
+  <meta name="description" content="Diseñamos y desarrollamos microapps, aplicaciones móviles, aplicaciones web y software a medida para empresas." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['"Space Grotesk"', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root { --accent: 37 99 235; --accent2: 56 189 248; }
+    html { scroll-snap-type: y proximity; }
+    @media (min-width: 768px) { html { scroll-snap-type: y mandatory; } }
+    body { background: #030a1f; color: #e5e7eb; overflow-x: hidden; }
+    section.panel { min-height: 100svh; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; padding: 6rem 0 4rem; }
+
+    /* Fondo dinámico que cambia con cada sección */
+    #bg-glow {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(60rem 40rem at 80% 10%, rgb(var(--accent) / .22), transparent 60%),
+        radial-gradient(50rem 40rem at 10% 90%, rgb(var(--accent2) / .18), transparent 60%);
+      transition: background .8s ease;
+    }
+    #bg-grid {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
+      background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    }
+    .accent-text { background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent2))); -webkit-background-clip: text; background-clip: text; color: transparent; transition: all .6s; }
+    .accent-bg { background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent2))); }
+    .glass { background: rgba(30,64,175,.14); border: 1px solid rgba(96,165,250,.16); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+    /* Animaciones de entrada */
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+    .reveal.d1 { transition-delay: .1s; } .reveal.d2 { transition-delay: .2s; } .reveal.d3 { transition-delay: .3s; } .reveal.d4 { transition-delay: .4s; }
+    .reveal-x { opacity: 0; transform: translateX(60px) scale(.96); transition: opacity .9s cubic-bezier(.2,.7,.2,1) .15s, transform .9s cubic-bezier(.2,.7,.2,1) .15s; }
+    section.in .reveal, section.in .reveal-x { opacity: 1; transform: none; }
+
+    @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+    .float { animation: float 6s ease-in-out infinite; }
+    .float-2 { animation: float 7s ease-in-out infinite -2s; }
+    .float-3 { animation: float 8s ease-in-out infinite -4s; }
+    @keyframes blink { 50% { opacity: 0 } }
+    .caret { animation: blink 1s steps(1) infinite; }
+    @keyframes bar { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+    section.in .bar { animation: bar .9s cubic-bezier(.2,.7,.2,1) both; transform-origin: bottom; }
+
+    .nav-link { position: relative; transition: color .3s; color: #9ca3af; }
+    .nav-link.active { color: #fff; }
+    .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; transform: scaleX(0); transition: transform .3s; background: rgb(var(--accent)); }
+    .nav-link.active::after { transform: scaleX(1); }
+
+    .dot { width: 10px; height: 10px; border-radius: 9999px; background: rgba(255,255,255,.25); transition: all .3s; }
+    .dot.active { background: rgb(var(--accent)); height: 28px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .reveal, .reveal-x { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased">
+  <div id="bg-glow"></div>
+  <div id="bg-grid"></div>
+
+  <!-- Barra de progreso -->
+  <div class="fixed top-0 left-0 right-0 h-[3px] z-[60]"><div id="progress" class="h-full accent-bg" style="width:0%"></div></div>
+
+  <!-- Header -->
+  <header class="fixed top-0 inset-x-0 z-50">
+    <div class="mx-auto max-w-7xl px-5 sm:px-8 mt-3">
+      <div class="glass rounded-2xl px-5 py-3 flex items-center justify-between">
+        <a href="#inicio" class="flex items-center gap-2 font-display font-bold text-xl text-white">
+          <span class="grid place-items-center w-8 h-8 rounded-lg accent-bg text-white text-sm">A</span> Answer
+        </a>
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-medium">
+          <a href="#inicio" class="nav-link">Inicio</a>
+          <a href="#microapps" class="nav-link">Microapps</a>
+          <a href="#moviles" class="nav-link">Apps móviles</a>
+          <a href="#web" class="nav-link">Apps web</a>
+          <a href="#software" class="nav-link">Software</a>
+          <a href="#proceso" class="nav-link">Proceso</a>
+        </nav>
+        <a href="#contacto" class="hidden lg:inline-flex accent-bg text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:opacity-90 transition">Cotizar proyecto</a>
+        <button id="menuBtn" class="lg:hidden p-2 text-white" aria-label="Abrir menú">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div id="mobileMenu" class="hidden glass rounded-2xl mt-2 p-4 lg:hidden">
+        <nav class="flex flex-col gap-1 text-sm font-medium">
+          <a href="#inicio" class="px-3 py-3 rounded-lg hover:bg-white/5">Inicio</a>
+          <a href="#microapps" class="px-3 py-3 rounded-lg hover:bg-white/5">Microapps</a>
+          <a href="#moviles" class="px-3 py-3 rounded-lg hover:bg-white/5">Apps móviles</a>
+          <a href="#web" class="px-3 py-3 rounded-lg hover:bg-white/5">Apps web</a>
+          <a href="#software" class="px-3 py-3 rounded-lg hover:bg-white/5">Software</a>
+          <a href="#proceso" class="px-3 py-3 rounded-lg hover:bg-white/5">Proceso</a>
+          <a href="#contacto" class="mt-2 accent-bg text-center text-white font-semibold px-3 py-3 rounded-xl">Cotizar proyecto</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navegación lateral por puntos -->
+  <nav id="dots" class="hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-50 flex-col items-center gap-3" aria-label="Secciones"></nav>
+
+  <main>
+    <!-- 1. HERO -->
+    <section id="inicio" class="panel" data-accent="37 99 235" data-accent2="56 189 248" data-title="Inicio">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="reveal glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-gray-300">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Estudio de desarrollo de software
+          </span>
+          <h1 class="reveal d1 font-display font-bold text-white text-4xl sm:text-5xl xl:text-7xl leading-[1.05] mt-6">
+            Tecnología a medida para <span class="accent-text">hacer crecer tu empresa</span>
+          </h1>
+          <p class="reveal d2 mt-6 text-lg text-gray-400 max-w-xl">
+            Creamos microapps, aplicaciones móviles, plataformas web y software empresarial. Del concepto al lanzamiento, con equipos senior y entregas continuas.
+          </p>
+          <div class="reveal d3 mt-9 flex flex-wrap gap-4">
+            <a href="#contacto" class="accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition shadow-lg shadow-blue-500/25">Empezar un proyecto</a>
+            <a href="#microapps" class="glass text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-white/10 transition">Ver servicios ↓</a>
+          </div>
+          <dl class="reveal d4 mt-12 grid grid-cols-3 gap-6 max-w-md">
+            <div><dt class="font-display text-3xl font-bold text-white" data-count="120" data-suffix="+">0</dt><dd class="text-xs text-gray-500 mt-1">Proyectos entregados</dd></div>
+            <div><dt class="font-display text-3xl font-bold text-white" data-count="8" data-suffix=" años">0</dt><dd class="text-xs text-gray-500 mt-1">De experiencia</dd></div>
+            <div><dt class="font-display text-3xl font-bold text-white" data-count="98" data-suffix="%">0</dt><dd class="text-xs text-gray-500 mt-1">Clientes satisfechos</dd></div>
+          </dl>
+        </div>
+
+        <!-- Visual hero: tarjetas de servicios flotantes -->
+        <div class="reveal-x relative hidden lg:block h-[460px]">
+          <div class="float glass absolute top-0 left-6 w-60 rounded-2xl p-5">
+            <div class="text-xs text-gray-400">Microapps</div>
+            <div class="font-display text-white text-xl mt-1">Lanzamiento en días</div>
+            <div class="mt-4 h-2 rounded-full bg-white/10"><div class="h-2 rounded-full accent-bg w-3/4"></div></div>
+          </div>
+          <div class="float-2 glass absolute top-24 right-0 w-64 rounded-2xl p-5">
+            <div class="text-xs text-gray-400">Apps móviles</div>
+            <div class="font-display text-white text-xl mt-1">iOS &amp; Android</div>
+            <div class="mt-4 flex gap-2"><span class="px-2.5 py-1 rounded-md bg-white/10 text-xs">Flutter</span><span class="px-2.5 py-1 rounded-md bg-white/10 text-xs">React Native</span></div>
+          </div>
+          <div class="float-3 glass absolute top-60 left-0 w-64 rounded-2xl p-5">
+            <div class="text-xs text-gray-400">Apps web</div>
+            <div class="font-display text-white text-xl mt-1">Plataformas escalables</div>
+            <div class="mt-4 flex items-end gap-1.5 h-10">
+              <span class="w-3 h-3/6 rounded-sm bg-white/20"></span><span class="w-3 h-4/6 rounded-sm bg-white/20"></span><span class="w-3 h-3/6 rounded-sm bg-white/20"></span><span class="w-3 h-5/6 rounded-sm accent-bg"></span><span class="w-3 h-full rounded-sm accent-bg"></span>
+            </div>
+          </div>
+          <div class="float glass absolute bottom-0 right-8 w-60 rounded-2xl p-5">
+            <div class="text-xs text-gray-400">Software a medida</div>
+            <div class="font-display text-white text-xl mt-1">Procesos automatizados</div>
+            <div class="mt-3 font-mono text-xs text-emerald-400">$ deploy --prod<span class="caret">▍</span></div>
+          </div>
+        </div>
+      </div>
+      <a href="#microapps" class="hidden md:flex absolute bottom-6 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-xs text-gray-500" aria-label="Bajar">
+        Desliza <span class="w-5 h-8 rounded-full border border-gray-600 flex justify-center pt-1.5"><span class="w-1 h-2 rounded-full bg-gray-400 animate-bounce"></span></span>
+      </a>
+    </section>
+
+    <!-- 2. MICROAPPS -->
+    <section id="microapps" class="panel" data-accent="59 130 246" data-accent2="34 211 238" data-title="Microapps">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">01 · Microapps</p>
+          <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Soluciones pequeñas, <span class="accent-text">impacto inmediato</span></h2>
+          <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Herramientas enfocadas que resuelven un problema concreto: formularios inteligentes, calculadoras, paneles internos, bots y automatizaciones. Se construyen rápido y se integran con lo que ya usas.</p>
+          <ul class="reveal d3 mt-8 grid sm:grid-cols-2 gap-4 text-sm">
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Entrega en 1–3 semanas</b><br><span class="text-gray-500">Validación rápida de ideas.</span></span></li>
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Integraciones</b><br><span class="text-gray-500">Slack, WhatsApp, Sheets, CRM.</span></span></li>
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Costo contenido</b><br><span class="text-gray-500">Alcance acotado, sin sorpresas.</span></span></li>
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Listas para escalar</b><br><span class="text-gray-500">Crecen a producto completo.</span></span></li>
+          </ul>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Quiero una microapp</a>
+        </div>
+        <!-- Visual: widgets -->
+        <div class="reveal-x relative h-[400px] sm:h-[460px]">
+          <div class="float glass absolute left-0 top-4 w-56 sm:w-64 rounded-2xl p-5">
+            <div class="flex justify-between text-xs text-gray-400"><span>Calculadora de cotización</span><span>⚡</span></div>
+            <div class="font-display text-3xl text-white mt-3">S/ 4,280</div>
+            <div class="mt-3 h-1.5 rounded-full bg-white/10"><div class="h-1.5 rounded-full accent-bg w-2/3"></div></div>
+          </div>
+          <div class="float-2 glass absolute right-0 top-24 w-52 sm:w-60 rounded-2xl p-5">
+            <div class="text-xs text-gray-400 mb-3">Automatización</div>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center gap-2"><span class="w-4 h-4 rounded accent-bg"></span> Nuevo pedido</div>
+              <div class="ml-2 h-4 w-px bg-white/20"></div>
+              <div class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-white/20"></span> Enviar WhatsApp</div>
+              <div class="ml-2 h-4 w-px bg-white/20"></div>
+              <div class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-white/20"></span> Registrar en CRM</div>
+            </div>
+          </div>
+          <div class="float-3 glass absolute left-6 sm:left-12 bottom-0 w-60 sm:w-72 rounded-2xl p-5">
+            <div class="text-xs text-gray-400 mb-3">Formulario inteligente</div>
+            <div class="h-8 rounded-lg bg-white/10 mb-2"></div>
+            <div class="h-8 rounded-lg bg-white/10 mb-3"></div>
+            <div class="h-9 rounded-lg accent-bg grid place-items-center text-xs font-semibold text-white">Enviar</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. APPS MÓVILES -->
+    <section id="moviles" class="panel" data-accent="37 99 235" data-accent2="99 102 241" data-title="Apps móviles">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Visual: teléfono -->
+        <div class="reveal-x order-2 lg:order-1 flex justify-center">
+          <div class="relative">
+            <div class="float w-[250px] sm:w-[280px] h-[500px] sm:h-[540px] rounded-[2.6rem] border-[10px] border-[#12254d] bg-[#071330] shadow-2xl shadow-blue-500/20 overflow-hidden">
+              <div class="mx-auto mt-2 w-24 h-5 rounded-full bg-[#12254d]"></div>
+              <div class="p-5">
+                <div class="flex justify-between items-center"><div><div class="text-xs text-gray-500">Hola, Ana 👋</div><div class="font-display text-white text-lg">Tu resumen</div></div><div class="w-9 h-9 rounded-full accent-bg"></div></div>
+                <div class="mt-5 rounded-2xl accent-bg p-4 text-white"><div class="text-xs opacity-80">Saldo disponible</div><div class="font-display text-3xl mt-1">S/ 12,480</div></div>
+                <div class="mt-5 grid grid-cols-4 gap-3 text-center text-[10px] text-gray-400">
+                  <div><div class="w-full aspect-square rounded-xl bg-white/10 mb-1"></div>Pagar</div><div><div class="w-full aspect-square rounded-xl bg-white/10 mb-1"></div>Enviar</div><div><div class="w-full aspect-square rounded-xl bg-white/10 mb-1"></div>Cobrar</div><div><div class="w-full aspect-square rounded-xl bg-white/10 mb-1"></div>Más</div>
+                </div>
+                <div class="mt-5 space-y-2">
+                  <div class="flex items-center gap-3 rounded-xl bg-white/5 p-3"><div class="w-8 h-8 rounded-lg bg-white/10"></div><div class="flex-1 text-xs text-white">Supermercado<div class="text-gray-500">Hoy</div></div><div class="text-xs text-rose-400">-S/ 86</div></div>
+                  <div class="flex items-center gap-3 rounded-xl bg-white/5 p-3"><div class="w-8 h-8 rounded-lg bg-white/10"></div><div class="flex-1 text-xs text-white">Pago recibido<div class="text-gray-500">Ayer</div></div><div class="text-xs text-emerald-400">+S/ 540</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="float-2 glass absolute -right-4 sm:-right-14 top-16 rounded-2xl px-4 py-3 text-xs"><span class="text-gray-400">Notificación push</span><br><b class="text-white">¡Tu pedido va en camino! 🚀</b></div>
+            <div class="float-3 glass absolute -left-4 sm:-left-14 bottom-24 rounded-2xl px-4 py-3 text-xs"><span class="text-gray-400">Valoración</span><br><b class="text-white">★ 4.9 en tiendas</b></div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">02 · Apps móviles</p>
+          <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Apps que tus clientes <span class="accent-text">quieren usar</span></h2>
+          <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Aplicaciones nativas y multiplataforma para iOS y Android, con diseño cuidado, rendimiento fluido y publicación en las tiendas incluida.</p>
+          <div class="reveal d3 mt-8 flex flex-wrap gap-2.5">
+            <span class="glass px-4 py-2 rounded-full text-sm">Flutter</span><span class="glass px-4 py-2 rounded-full text-sm">React Native</span><span class="glass px-4 py-2 rounded-full text-sm">Swift</span><span class="glass px-4 py-2 rounded-full text-sm">Kotlin</span><span class="glass px-4 py-2 rounded-full text-sm">Notificaciones push</span><span class="glass px-4 py-2 rounded-full text-sm">Modo offline</span>
+          </div>
+          <ul class="reveal d3 mt-8 space-y-3 text-gray-300">
+            <li class="flex gap-3"><Check></Check> Diseño UX/UI y prototipo interactivo</li>
+            <li class="flex gap-3"><Check></Check> Pagos, geolocalización, cámara y biometría</li>
+            <li class="flex gap-3"><Check></Check> Publicación en App Store y Google Play</li>
+          </ul>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Cotizar mi app</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. APPS WEB -->
+    <section id="web" class="panel" data-accent="14 165 233" data-accent2="37 99 235" data-title="Apps web">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">03 · Apps web</p>
+          <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Plataformas web <span class="accent-text">rápidas y escalables</span></h2>
+          <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Portales de clientes, marketplaces, SaaS, e-commerce y paneles de administración. Arquitectura moderna, segura y lista para crecer con tu negocio.</p>
+          <div class="reveal d3 mt-8 grid grid-cols-2 gap-4">
+            <div class="glass rounded-2xl p-5"><div class="font-display text-2xl text-white">PWA</div><p class="text-sm text-gray-500 mt-1">Instalables y funcionan sin conexión.</p></div>
+            <div class="glass rounded-2xl p-5"><div class="font-display text-2xl text-white">SaaS</div><p class="text-sm text-gray-500 mt-1">Multi-cliente, suscripciones y facturación.</p></div>
+            <div class="glass rounded-2xl p-5"><div class="font-display text-2xl text-white">E-commerce</div><p class="text-sm text-gray-500 mt-1">Catálogos, pagos y logística integrada.</p></div>
+            <div class="glass rounded-2xl p-5"><div class="font-display text-2xl text-white">APIs</div><p class="text-sm text-gray-500 mt-1">Integración con sistemas existentes.</p></div>
+          </div>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Hablemos de tu plataforma</a>
+        </div>
+        <!-- Visual: navegador -->
+        <div class="reveal-x">
+          <div class="float glass rounded-2xl overflow-hidden shadow-2xl shadow-blue-500/10">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+              <span class="w-3 h-3 rounded-full bg-rose-400"></span><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              <div class="ml-3 flex-1 h-6 rounded-md bg-white/5 text-[11px] text-gray-500 flex items-center px-3">app.tuempresa.com/dashboard</div>
+            </div>
+            <div class="p-5 grid grid-cols-3 gap-4">
+              <div class="col-span-3 sm:col-span-1 space-y-2">
+                <div class="h-8 rounded-lg accent-bg"></div><div class="h-8 rounded-lg bg-white/5"></div><div class="h-8 rounded-lg bg-white/5"></div><div class="h-8 rounded-lg bg-white/5"></div>
+              </div>
+              <div class="col-span-3 sm:col-span-2">
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="rounded-xl bg-white/5 p-3"><div class="text-[10px] text-gray-500">Usuarios</div><div class="font-display text-white text-lg">24.8k</div></div>
+                  <div class="rounded-xl bg-white/5 p-3"><div class="text-[10px] text-gray-500">Ventas</div><div class="font-display text-white text-lg">$92k</div></div>
+                  <div class="rounded-xl bg-white/5 p-3"><div class="text-[10px] text-gray-500">Conv.</div><div class="font-display text-white text-lg">4.2%</div></div>
+                </div>
+                <div class="mt-3 rounded-xl bg-white/5 p-4 h-36 flex items-end gap-2">
+                  <span class="bar flex-1 rounded-t-md bg-white/20" style="height:35%"></span><span class="bar flex-1 rounded-t-md bg-white/20" style="height:50%;animation-delay:.05s"></span><span class="bar flex-1 rounded-t-md bg-white/20" style="height:42%;animation-delay:.1s"></span><span class="bar flex-1 rounded-t-md accent-bg" style="height:68%;animation-delay:.15s"></span><span class="bar flex-1 rounded-t-md bg-white/20" style="height:55%;animation-delay:.2s"></span><span class="bar flex-1 rounded-t-md accent-bg" style="height:82%;animation-delay:.25s"></span><span class="bar flex-1 rounded-t-md accent-bg" style="height:96%;animation-delay:.3s"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SOFTWARE -->
+    <section id="software" class="panel" data-accent="30 64 175" data-accent2="56 189 248" data-title="Software">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Visual: terminal -->
+        <div class="reveal-x order-2 lg:order-1">
+          <div class="float glass rounded-2xl overflow-hidden shadow-2xl shadow-blue-500/10">
+            <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10"><span class="w-3 h-3 rounded-full bg-rose-400"></span><span class="w-3 h-3 rounded-full bg-amber-400"></span><span class="w-3 h-3 rounded-full bg-emerald-400"></span><span class="ml-3 text-xs text-gray-500">erp-core — build</span></div>
+            <pre class="p-5 text-[12px] sm:text-[13px] leading-6 font-mono text-gray-300 overflow-x-auto"><span class="text-gray-500"># Pipeline de entrega continua</span>
+<span class="text-sky-400">$</span> npm run test
+<span class="text-emerald-400">✔</span> 482 pruebas aprobadas
+<span class="text-sky-400">$</span> docker build -t erp-core .
+<span class="text-emerald-400">✔</span> imagen construida (38s)
+<span class="text-sky-400">$</span> deploy --env production
+<span class="text-emerald-400">✔</span> módulos: inventario, facturación, RRHH
+<span class="text-emerald-400">✔</span> desplegado sin downtime
+<span class="text-sky-400">$</span><span class="caret">▍</span></pre>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2">
+          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">04 · Software</p>
+          <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Software a medida <span class="accent-text">para tu operación</span></h2>
+          <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Sistemas empresariales construidos alrededor de tus procesos: ERP, CRM, facturación, inventario, logística y herramientas internas que ninguna solución genérica cubre.</p>
+          <ul class="reveal d3 mt-8 space-y-4">
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Análisis y arquitectura</b> <span class="text-gray-500">— entendemos tu negocio antes de programar.</span></span></li>
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Migración de datos</b> <span class="text-gray-500">— sin perder tu historial.</span></span></li>
+            <li class="flex gap-3"><Check></Check><span><b class="text-white">Seguridad y soporte</b> <span class="text-gray-500">— monitoreo, respaldos y mejoras continuas.</span></span></li>
+          </ul>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Agendar diagnóstico</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. PROCESO -->
+    <section id="proceso" class="panel" data-accent="67 56 202" data-accent2="59 130 246" data-title="Proceso">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">Cómo trabajamos</p>
+          <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Un proceso claro, <span class="accent-text">resultados medibles</span></h2>
+        </div>
+        <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="reveal d1 glass rounded-2xl p-6"><div class="font-display text-5xl accent-text font-bold">01</div><h3 class="font-display text-white text-xl mt-4">Descubrimiento</h3><p class="text-sm text-gray-400 mt-2">Definimos objetivos, usuarios y alcance en un taller de trabajo contigo.</p></div>
+          <div class="reveal d2 glass rounded-2xl p-6"><div class="font-display text-5xl accent-text font-bold">02</div><h3 class="font-display text-white text-xl mt-4">Diseño</h3><p class="text-sm text-gray-400 mt-2">Prototipos navegables para validar la experiencia antes de desarrollar.</p></div>
+          <div class="reveal d3 glass rounded-2xl p-6"><div class="font-display text-5xl accent-text font-bold">03</div><h3 class="font-display text-white text-xl mt-4">Desarrollo</h3><p class="text-sm text-gray-400 mt-2">Sprints cortos con entregas funcionales y visibilidad total del avance.</p></div>
+          <div class="reveal d4 glass rounded-2xl p-6"><div class="font-display text-5xl accent-text font-bold">04</div><h3 class="font-display text-white text-xl mt-4">Lanzamiento</h3><p class="text-sm text-gray-400 mt-2">Despliegue, capacitación y soporte continuo para que sigas creciendo.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONTACTO + FOOTER -->
+    <section id="contacto" class="panel" data-accent="37 99 235" data-accent2="14 165 233" data-title="Contacto">
+      <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">Contacto</p>
+          <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Construyamos <span class="accent-text">tu próximo producto</span></h2>
+          <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-md">Cuéntanos tu idea y te respondemos en menos de 24 horas con una propuesta inicial.</p>
+          <div class="reveal d3 mt-8 space-y-3 text-gray-300 text-sm">
+            <p>📧 hola@answer.dev</p>
+            <p>📱 +51 900 000 000</p>
+            <p>📍 Lima, Perú · Trabajamos en remoto</p>
+          </div>
+        </div>
+        <form id="contactForm" class="reveal-x glass rounded-3xl p-6 sm:p-8 space-y-4" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <label class="block text-sm text-gray-400">Nombre
+              <input required name="nombre" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition" placeholder="Tu nombre" />
+            </label>
+            <label class="block text-sm text-gray-400">Correo
+              <input required type="email" name="email" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition" placeholder="tu@empresa.com" />
+            </label>
+          </div>
+          <label class="block text-sm text-gray-400">Servicio de interés
+            <select name="servicio" class="mt-1.5 w-full rounded-xl bg-[#08163a] border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition">
+              <option>Microapps</option><option>Apps móviles</option><option>Apps web</option><option>Software a medida</option>
+            </select>
+          </label>
+          <label class="block text-sm text-gray-400">Cuéntanos sobre tu proyecto
+            <textarea required name="mensaje" rows="4" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition" placeholder="¿Qué necesitas construir?"></textarea>
+          </label>
+          <button class="w-full accent-bg text-white font-semibold py-3.5 rounded-xl hover:opacity-90 transition">Enviar mensaje</button>
+          <p id="formMsg" class="text-sm text-center min-h-5"></p>
+        </form>
+      </div>
+      <footer class="absolute bottom-4 inset-x-0 text-center text-xs text-gray-600">© <span id="year"></span> Answer. Todos los derechos reservados.</footer>
+    </section>
+  </main>
+
+  <script>
+    // Icono check reutilizable (reemplaza <check></check>)
+    const checkSVG = '<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--accent))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-opacity=".35"/><path d="m8 12 3 3 5-6"/></svg>';
+    document.querySelectorAll('check').forEach(el => el.outerHTML = checkSVG);
+
+    const root = document.documentElement;
+    const sections = [...document.querySelectorAll('section.panel')];
+    const navLinks = [...document.querySelectorAll('.nav-link')];
+    const dotsWrap = document.getElementById('dots');
+
+    // Puntos laterales
+    sections.forEach(s => {
+      const a = document.createElement('a');
+      a.href = '#' + s.id; a.className = 'dot'; a.title = s.dataset.title; a.setAttribute('aria-label', s.dataset.title);
+      dotsWrap.appendChild(a);
+    });
+    const dots = [...dotsWrap.children];
+
+    // Contadores animados
+    function countUp(el) {
+      if (el.dataset.done) return; el.dataset.done = 1;
+      const end = +el.dataset.count, suffix = el.dataset.suffix || '', dur = 1400, t0 = performance.now();
+      (function tick(t) {
+        const p = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(end * e) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      })(t0);
+    }
+
+    // Detecta la sección activa y cambia colores, nav y animaciones
+    function activate(sec) {
+      sec.classList.add('in');
+      root.style.setProperty('--accent', sec.dataset.accent);
+      root.style.setProperty('--accent2', sec.dataset.accent2);
+      const i = sections.indexOf(sec);
+      dots.forEach((d, k) => d.classList.toggle('active', k === i));
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + sec.id));
+      sec.querySelectorAll('[data-count]').forEach(countUp);
+    }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) activate(e.target); });
+    }, { threshold: 0.55 });
+    sections.forEach(s => io.observe(s));
+    activate(sections[0]);
+
+    // Progreso de scroll
+    const progress = document.getElementById('progress');
+    addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - innerHeight;
+      progress.style.width = (scrollY / h * 100) + '%';
+    }, { passive: true });
+
+    // Menú móvil
+    const menu = document.getElementById('mobileMenu');
+    document.getElementById('menuBtn').addEventListener('click', () => menu.classList.toggle('hidden'));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.add('hidden')));
+
+    // Formulario (demo: conecta aquí tu backend o servicio de correo)
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const f = e.target, msg = document.getElementById('formMsg');
+      if (!f.nombre.value.trim() || !/^\S+@\S+\.\S+$/.test(f.email.value) || !f.mensaje.value.trim()) {
+        msg.textContent = 'Completa nombre, un correo válido y tu mensaje.'; msg.className = 'text-sm text-center text-rose-400'; return;
+      }
+      msg.textContent = '¡Gracias! Te responderemos pronto.'; msg.className = 'text-sm text-center text-emerald-400'; f.reset();
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
