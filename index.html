@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Answer | Desarrollo de microapps, apps móviles, web y software</title>
+  <meta name="theme-color" content="#030a1f" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cdefs%3E%3ClinearGradient id=%22p%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23fff%22/%3E%3Cstop offset=%22.6%22 stop-color=%22%23d3e3f5%22/%3E%3Cstop offset=%221%22 stop-color=%22%238794a8%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2308122b%22/%3E%3Crect x=%228%22 y=%2214%22 width=%2248%22 height=%2236%22 rx=%224%22 fill=%22url%28%23p%29%22/%3E%3Cpath d=%22M25.3 44.4V46.0H16.5V44.4L18.7 43.9L28.9 17.0H35.2L45.4 43.9L47.6 44.4V46.0H34.7V44.4L38.1 43.9L35.3 36.4H24.3L21.6 43.9ZM29.9 21.3 25.1 34.0H34.5Z%22 fill=%22%2324467f%22/%3E%3C/svg%3E" />
+  <title>ANSOFTW | Desarrollo de microapps, apps móviles, web y software</title>
   <meta name="description" content="Diseñamos y desarrollamos microapps, aplicaciones móviles, aplicaciones web y software a medida para empresas." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { display: ['"Space Grotesk"', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
+          fontFamily: { display: ['"Playfair Display"', 'Georgia', 'serif'], tech: ['"Space Grotesk"', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
         },
       },
     };
   </script>
   <style>
-    :root { --accent: 37 99 235; --accent2: 56 189 248; }
+    :root { --accent: 59 100 170; --accent2: 125 175 240; --silver: 219 231 245; }
     html { scroll-snap-type: y proximity; }
     @media (min-width: 768px) { html { scroll-snap-type: y mandatory; } }
     body { background: #030a1f; color: #e5e7eb; overflow-x: hidden; }
+    .font-display { font-variant-numeric: lining-nums; letter-spacing: -.01em; }
+    h1.font-display, h2.font-display { letter-spacing: -.02em; }
     section.panel { min-height: 100svh; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; padding: 6rem 0 4rem; }
 
     /* Fondo dinámico que cambia con cada sección */
@@ -40,9 +44,21 @@
       mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
       -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
     }
-    .accent-text { background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent2))); -webkit-background-clip: text; background-clip: text; color: transparent; transition: all .6s; }
-    .accent-bg { background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent2))); }
-    .glass { background: rgba(30,64,175,.14); border: 1px solid rgba(96,165,250,.16); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .accent-text { background: linear-gradient(100deg, rgb(var(--accent2)) 0%, #f1f6fd 100%); -webkit-background-clip: text; background-clip: text; color: transparent; transition: all .6s; }
+    .accent-bg { background: linear-gradient(110deg, rgb(var(--accent)), rgb(var(--accent2) / .85)); }
+    .btn-metal { background: linear-gradient(135deg,#ffffff 0%,#d3e3f5 55%,#8794a8 100%); color:#1b3a74; font-weight:600; transition: transform .25s, box-shadow .25s; box-shadow: 0 10px 30px -10px rgba(125,175,240,.45); }
+    .btn-metal:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 16px 40px -10px rgba(125,175,240,.6); }
+    .tag { display:inline-block; width:max-content; padding:.35rem .9rem; border-radius:4px; font-size:.72rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:#1b3a74; background: linear-gradient(135deg,#fff 0%,#d3e3f5 60%,#8794a8 100%); border-bottom:2px solid #2f5aa8; }
+    .glass { background: linear-gradient(160deg, rgba(47,90,168,.20), rgba(10,22,55,.35)); border: 1px solid rgba(160,190,235,.16); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .logo { display:block; height:auto; filter: drop-shadow(0 6px 18px rgba(47,90,168,.35)); }
+    @keyframes orbit { to { transform: translate(-50%,-50%) rotate(350deg) } }
+    .orbit { position:absolute; left:50%; top:50%; border-radius:50%; border:1px solid rgba(160,190,235,.14); transform: translate(-50%,-50%) rotate(-10deg); animation: orbit 60s linear infinite; }
+    .orbit::after { content:""; position:absolute; top:6%; left:50%; width:8px; height:8px; border-radius:50%; background:#dbe7f5; box-shadow:0 0 14px 3px rgba(160,200,255,.7); }
+    /* Pantalla de carga con el logo (solo CSS) */
+    #loader { position:fixed; inset:0; z-index:100; background:#030a1f; display:grid; place-items:center; animation: loaderOut .7s ease 1.7s forwards; }
+    #loader .logo { width:min(420px,78vw); animation: loaderLogo 1.6s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes loaderLogo { from { opacity:0; transform: scale(.86) translateY(14px) } to { opacity:1; transform:none } }
+    @keyframes loaderOut { to { opacity:0; visibility:hidden } }
 
     /* Animaciones de entrada */
     .reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
@@ -61,20 +77,38 @@
 
     .nav-link { position: relative; transition: color .3s; color: #9ca3af; }
     .nav-link.active { color: #fff; }
-    .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; transform: scaleX(0); transition: transform .3s; background: rgb(var(--accent)); }
+    .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; transform: scaleX(0); transition: transform .3s; background: rgb(var(--accent2)); }
     .nav-link.active::after { transform: scaleX(1); }
 
     .dot { width: 10px; height: 10px; border-radius: 9999px; background: rgba(255,255,255,.25); transition: all .3s; }
-    .dot.active { background: rgb(var(--accent)); height: 28px; }
+    .dot.active { background: rgb(var(--accent2)); height: 28px; }
 
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
+      #loader { display: none; }
       .reveal, .reveal-x { opacity: 1; transform: none; }
       html { scroll-behavior: auto; }
     }
   </style>
 </head>
 <body class="font-sans antialiased">
+  <!-- Logo ANSOFTW (vectorial, reutilizable) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs><linearGradient id="ax-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14224a"/><stop offset="1" stop-color="#050b20"/></linearGradient>
+<linearGradient id="ax-ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eaf2fc"/><stop offset=".5" stop-color="#5b7db5" stop-opacity=".55"/><stop offset="1" stop-color="#cfdcee"/></linearGradient>
+<linearGradient id="ax-gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="ax-plate" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#d3e3f5"/><stop offset="1" stop-color="#8794a8"/></linearGradient>
+<linearGradient id="ax-letter" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#355ea3"/><stop offset="1" stop-color="#1b3a74"/></linearGradient></defs>
+    <symbol id="logo" viewBox="0 0 800 230"><ellipse cx="400.0" cy="115.0" rx="394.0" ry="110.0" fill="url(#ax-bg)"/>
+<ellipse cx="400.0" cy="115.0" rx="386.0" ry="102.0" fill="none" stroke="url(#ax-ring)" stroke-width="1.6"/>
+<ellipse cx="400.0" cy="53.0" rx="280.0" ry="34" fill="url(#ax-gloss)"/>
+<rect x="93.3" y="89.0" width="248.0" height="78" rx="3" fill="url(#ax-plate)"/>
+<rect x="344.4" y="63.0" width="362.3" height="78" rx="3" fill="url(#ax-plate)"/>
+<rect x="93.3" y="164.0" width="248.0" height="3" rx="1.5" fill="#2f5aa8" opacity=".9"/>
+<rect x="344.4" y="138.0" width="362.3" height="3" rx="1.5" fill="#2f5aa8" opacity=".9"/>
+<path d="M135.37 156.01V159.43H116.24V156.01L120.93 154.74L143.29 96.05H156.88L179.15 154.74L183.93 156.01V159.43H155.95V156.01L163.21 154.74L157.21 138.48H133.07L127.3 154.74ZM145.35 105.52 134.99 133.32H155.43Z M251.77 101.21 243.34 99.99V96.57H265.7V99.99L257.63 101.21V159.43H252.15L213.38 108.9V154.74L221.82 156.01V159.43H199.46V156.01L207.52 154.74V101.21L199.46 99.99V96.57H220.98L251.77 136.74Z M285.07 140.16H289.2L291.3 150.24Q293.27 152.54 297.26 154.09Q301.24 155.63 305.51 155.63Q318.96 155.63 318.96 144.57Q318.96 141.1 316.41 138.71Q313.85 136.32 308.37 134.45Q300.3 131.77 296.77 130.11Q293.23 128.45 290.79 126.2Q288.35 123.95 286.9 120.73Q285.45 117.52 285.45 112.84Q285.45 104.54 291.09 100.2Q296.74 95.87 307.62 95.87Q315.49 95.87 325.05 97.88V112.84H320.88L318.77 104.21Q313.99 100.74 307.62 100.74Q301.85 100.74 298.76 102.88Q295.66 105.01 295.66 109.41Q295.66 112.55 298.24 114.78Q300.82 117.01 306.3 118.74Q317.04 122.26 321.05 124.86Q325.05 127.46 327.16 131.3Q329.27 135.15 329.27 140.35Q329.27 160.37 305.7 160.37Q300.3 160.37 294.7 159.45Q289.1 158.54 285.07 157.04Z" fill="url(#ax-letter)"/><path d="M372.6 101.93Q372.6 116.88 376.7 123.28Q380.8 129.68 389.71 129.68Q398.57 129.68 402.67 123.26Q406.77 116.84 406.77 101.93Q406.77 87.07 402.67 80.84Q398.57 74.6 389.71 74.6Q380.8 74.6 376.7 80.84Q372.6 87.07 372.6 101.93ZM357.04 101.93Q357.04 69.87 389.71 69.87Q405.84 69.87 414.09 78Q422.34 86.13 422.34 101.93Q422.34 117.91 413.99 126.14Q405.65 134.37 389.71 134.37Q373.82 134.37 365.43 126.16Q357.04 117.96 357.04 101.93Z M464.49 106.62V128.74L474.95 130.01V133.43H442.27V130.01L449.73 128.74V75.21L441.66 73.99V70.57H494.07V87.49H489.66L488.16 76.38Q485.87 76.05 480.57 75.89Q475.27 75.73 472.23 75.73H464.49V101.46H479.82L481.27 93.49H485.45V114.68H481.27L479.82 106.62Z M526.2 133.43V130.01L536.18 128.74V75.54H533.79Q523.05 75.54 518.7 76.48L517.43 88.15H513.16V70.57H574.24V88.15H569.93L568.66 76.48Q564.77 75.63 553.29 75.63H550.99V128.74L560.98 130.01V133.43Z M659.05 134.88H653.29L637.63 96.12L622.12 134.88H616.35L595.54 75.21L590.05 73.99V70.57H618.27V73.99L610.91 75.21L624.32 112.66L639.04 75.91H644.9L659.66 112.57L670.77 75.21L662.85 73.99V70.57H683.2V73.99L677.71 75.21Z" fill="url(#ax-letter)"/></symbol>
+  </svg>
+  <div id="loader" aria-hidden="true"><svg class="logo" viewBox="0 0 800 230"><use href="#logo"/></svg></div>
   <div id="bg-glow"></div>
   <div id="bg-grid"></div>
 
@@ -85,8 +119,8 @@
   <header class="fixed top-0 inset-x-0 z-50">
     <div class="mx-auto max-w-7xl px-5 sm:px-8 mt-3">
       <div class="glass rounded-2xl px-5 py-3 flex items-center justify-between">
-        <a href="#inicio" class="flex items-center gap-2 font-display font-bold text-xl text-white">
-          <span class="grid place-items-center w-8 h-8 rounded-lg accent-bg text-white text-sm">A</span> Answer
+        <a href="#inicio" class="flex items-center" aria-label="ANSOFTW — Inicio">
+          <svg class="logo h-10 sm:h-11 w-auto" style="aspect-ratio:800/230" viewBox="0 0 800 230"><use href="#logo"/></svg>
         </a>
         <nav class="hidden lg:flex items-center gap-7 text-sm font-medium">
           <a href="#inicio" class="nav-link">Inicio</a>
@@ -96,7 +130,7 @@
           <a href="#software" class="nav-link">Software</a>
           <a href="#proceso" class="nav-link">Proceso</a>
         </nav>
-        <a href="#contacto" class="hidden lg:inline-flex accent-bg text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:opacity-90 transition">Cotizar proyecto</a>
+        <a href="#contacto" class="hidden lg:inline-flex btn-metal text-sm px-5 py-2.5 rounded-lg">Cotizar proyecto</a>
         <button id="menuBtn" class="lg:hidden p-2 text-white" aria-label="Abrir menú">
           <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
         </button>
@@ -109,7 +143,7 @@
           <a href="#web" class="px-3 py-3 rounded-lg hover:bg-white/5">Apps web</a>
           <a href="#software" class="px-3 py-3 rounded-lg hover:bg-white/5">Software</a>
           <a href="#proceso" class="px-3 py-3 rounded-lg hover:bg-white/5">Proceso</a>
-          <a href="#contacto" class="mt-2 accent-bg text-center text-white font-semibold px-3 py-3 rounded-xl">Cotizar proyecto</a>
+          <a href="#contacto" class="mt-2 btn-metal text-center px-3 py-3 rounded-lg">Cotizar proyecto</a>
         </nav>
       </div>
     </div>
@@ -120,9 +154,10 @@
 
   <main>
     <!-- 1. HERO -->
-    <section id="inicio" class="panel" data-accent="37 99 235" data-accent2="56 189 248" data-title="Inicio">
+    <section id="inicio" class="panel" data-accent="59 100 170" data-accent2="125 175 240" data-title="Inicio">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div>
+          <svg class="reveal logo lg:hidden w-64 mb-6" viewBox="0 0 800 230"><use href="#logo"/></svg>
           <span class="reveal glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-gray-300">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Estudio de desarrollo de software
           </span>
@@ -133,8 +168,8 @@
             Creamos microapps, aplicaciones móviles, plataformas web y software empresarial. Del concepto al lanzamiento, con equipos senior y entregas continuas.
           </p>
           <div class="reveal d3 mt-9 flex flex-wrap gap-4">
-            <a href="#contacto" class="accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition shadow-lg shadow-blue-500/25">Empezar un proyecto</a>
-            <a href="#microapps" class="glass text-white font-semibold px-7 py-3.5 rounded-xl hover:bg-white/10 transition">Ver servicios ↓</a>
+            <a href="#contacto" class="btn-metal px-7 py-3.5 rounded-lg">Empezar un proyecto</a>
+            <a href="#microapps" class="glass text-white font-semibold px-7 py-3.5 rounded-lg hover:bg-white/10 transition">Ver servicios ↓</a>
           </div>
           <dl class="reveal d4 mt-12 grid grid-cols-3 gap-6 max-w-md">
             <div><dt class="font-display text-3xl font-bold text-white" data-count="120" data-suffix="+">0</dt><dd class="text-xs text-gray-500 mt-1">Proyectos entregados</dd></div>
@@ -143,29 +178,32 @@
           </dl>
         </div>
 
-        <!-- Visual hero: tarjetas de servicios flotantes -->
-        <div class="reveal-x relative hidden lg:block h-[460px]">
-          <div class="float glass absolute top-0 left-6 w-60 rounded-2xl p-5">
+        <!-- Visual hero: logo + tarjetas de servicios -->
+        <div class="reveal-x relative hidden lg:block h-[500px]">
+          <div class="orbit w-[105%] h-[64%]"></div>
+          <div class="orbit w-[80%] h-[44%]" style="animation-direction:reverse;animation-duration:45s"></div>
+          <svg class="logo absolute left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2" viewBox="0 0 800 230"><use href="#logo"/></svg>
+          <div class="float glass absolute top-0 left-0 w-56 rounded-2xl p-5">
             <div class="text-xs text-gray-400">Microapps</div>
-            <div class="font-display text-white text-xl mt-1">Lanzamiento en días</div>
-            <div class="mt-4 h-2 rounded-full bg-white/10"><div class="h-2 rounded-full accent-bg w-3/4"></div></div>
+            <div class="font-display text-white text-lg mt-1">Lanzamiento en días</div>
+            <div class="mt-4 h-1.5 rounded-full bg-white/10"><div class="h-1.5 rounded-full accent-bg w-3/4"></div></div>
           </div>
-          <div class="float-2 glass absolute top-24 right-0 w-64 rounded-2xl p-5">
+          <div class="float-2 glass absolute top-4 right-0 w-56 rounded-2xl p-5">
             <div class="text-xs text-gray-400">Apps móviles</div>
-            <div class="font-display text-white text-xl mt-1">iOS &amp; Android</div>
-            <div class="mt-4 flex gap-2"><span class="px-2.5 py-1 rounded-md bg-white/10 text-xs">Flutter</span><span class="px-2.5 py-1 rounded-md bg-white/10 text-xs">React Native</span></div>
+            <div class="font-display text-white text-lg mt-1">iOS &amp; Android</div>
+            <div class="mt-3 flex gap-2"><span class="px-2.5 py-1 rounded-md bg-white/10 text-xs">Flutter</span><span class="px-2.5 py-1 rounded-md bg-white/10 text-xs">React Native</span></div>
           </div>
-          <div class="float-3 glass absolute top-60 left-0 w-64 rounded-2xl p-5">
+          <div class="float-3 glass absolute bottom-2 left-0 w-56 rounded-2xl p-5">
             <div class="text-xs text-gray-400">Apps web</div>
-            <div class="font-display text-white text-xl mt-1">Plataformas escalables</div>
-            <div class="mt-4 flex items-end gap-1.5 h-10">
+            <div class="font-display text-white text-lg mt-1">Plataformas escalables</div>
+            <div class="mt-3 flex items-end gap-1.5 h-8">
               <span class="w-3 h-3/6 rounded-sm bg-white/20"></span><span class="w-3 h-4/6 rounded-sm bg-white/20"></span><span class="w-3 h-3/6 rounded-sm bg-white/20"></span><span class="w-3 h-5/6 rounded-sm accent-bg"></span><span class="w-3 h-full rounded-sm accent-bg"></span>
             </div>
           </div>
-          <div class="float glass absolute bottom-0 right-8 w-60 rounded-2xl p-5">
+          <div class="float glass absolute bottom-0 right-0 w-56 rounded-2xl p-5">
             <div class="text-xs text-gray-400">Software a medida</div>
-            <div class="font-display text-white text-xl mt-1">Procesos automatizados</div>
-            <div class="mt-3 font-mono text-xs text-emerald-400">$ deploy --prod<span class="caret">▍</span></div>
+            <div class="font-display text-white text-lg mt-1">Procesos automatizados</div>
+            <div class="mt-3 font-mono text-xs text-sky-300">$ deploy --prod<span class="caret">▍</span></div>
           </div>
         </div>
       </div>
@@ -175,10 +213,10 @@
     </section>
 
     <!-- 2. MICROAPPS -->
-    <section id="microapps" class="panel" data-accent="59 130 246" data-accent2="34 211 238" data-title="Microapps">
+    <section id="microapps" class="panel" data-accent="40 110 190" data-accent2="100 200 235" data-title="Microapps">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">01 · Microapps</p>
+          <p class="reveal tag">01 · Microapps</p>
           <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Soluciones pequeñas, <span class="accent-text">impacto inmediato</span></h2>
           <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Herramientas enfocadas que resuelven un problema concreto: formularios inteligentes, calculadoras, paneles internos, bots y automatizaciones. Se construyen rápido y se integran con lo que ya usas.</p>
           <ul class="reveal d3 mt-8 grid sm:grid-cols-2 gap-4 text-sm">
@@ -187,7 +225,7 @@
             <li class="flex gap-3"><Check></Check><span><b class="text-white">Costo contenido</b><br><span class="text-gray-500">Alcance acotado, sin sorpresas.</span></span></li>
             <li class="flex gap-3"><Check></Check><span><b class="text-white">Listas para escalar</b><br><span class="text-gray-500">Crecen a producto completo.</span></span></li>
           </ul>
-          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Quiero una microapp</a>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 btn-metal px-7 py-3.5 rounded-lg">Quiero una microapp</a>
         </div>
         <!-- Visual: widgets -->
         <div class="reveal-x relative h-[400px] sm:h-[460px]">
@@ -217,7 +255,7 @@
     </section>
 
     <!-- 3. APPS MÓVILES -->
-    <section id="moviles" class="panel" data-accent="37 99 235" data-accent2="99 102 241" data-title="Apps móviles">
+    <section id="moviles" class="panel" data-accent="55 90 175" data-accent2="140 160 240" data-title="Apps móviles">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <!-- Visual: teléfono -->
         <div class="reveal-x order-2 lg:order-1 flex justify-center">
@@ -241,7 +279,7 @@
           </div>
         </div>
         <div class="order-1 lg:order-2">
-          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">02 · Apps móviles</p>
+          <p class="reveal tag">02 · Apps móviles</p>
           <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Apps que tus clientes <span class="accent-text">quieren usar</span></h2>
           <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Aplicaciones nativas y multiplataforma para iOS y Android, con diseño cuidado, rendimiento fluido y publicación en las tiendas incluida.</p>
           <div class="reveal d3 mt-8 flex flex-wrap gap-2.5">
@@ -252,16 +290,16 @@
             <li class="flex gap-3"><Check></Check> Pagos, geolocalización, cámara y biometría</li>
             <li class="flex gap-3"><Check></Check> Publicación en App Store y Google Play</li>
           </ul>
-          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Cotizar mi app</a>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 btn-metal px-7 py-3.5 rounded-lg">Cotizar mi app</a>
         </div>
       </div>
     </section>
 
     <!-- 4. APPS WEB -->
-    <section id="web" class="panel" data-accent="14 165 233" data-accent2="37 99 235" data-title="Apps web">
+    <section id="web" class="panel" data-accent="30 120 190" data-accent2="120 195 245" data-title="Apps web">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">03 · Apps web</p>
+          <p class="reveal tag">03 · Apps web</p>
           <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Plataformas web <span class="accent-text">rápidas y escalables</span></h2>
           <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Portales de clientes, marketplaces, SaaS, e-commerce y paneles de administración. Arquitectura moderna, segura y lista para crecer con tu negocio.</p>
           <div class="reveal d3 mt-8 grid grid-cols-2 gap-4">
@@ -270,7 +308,7 @@
             <div class="glass rounded-2xl p-5"><div class="font-display text-2xl text-white">E-commerce</div><p class="text-sm text-gray-500 mt-1">Catálogos, pagos y logística integrada.</p></div>
             <div class="glass rounded-2xl p-5"><div class="font-display text-2xl text-white">APIs</div><p class="text-sm text-gray-500 mt-1">Integración con sistemas existentes.</p></div>
           </div>
-          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Hablemos de tu plataforma</a>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 btn-metal px-7 py-3.5 rounded-lg">Hablemos de tu plataforma</a>
         </div>
         <!-- Visual: navegador -->
         <div class="reveal-x">
@@ -300,7 +338,7 @@
     </section>
 
     <!-- 5. SOFTWARE -->
-    <section id="software" class="panel" data-accent="30 64 175" data-accent2="56 189 248" data-title="Software">
+    <section id="software" class="panel" data-accent="47 79 133" data-accent2="160 190 230" data-title="Software">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <!-- Visual: terminal -->
         <div class="reveal-x order-2 lg:order-1">
@@ -318,7 +356,7 @@
           </div>
         </div>
         <div class="order-1 lg:order-2">
-          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">04 · Software</p>
+          <p class="reveal tag">04 · Software</p>
           <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Software a medida <span class="accent-text">para tu operación</span></h2>
           <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-xl">Sistemas empresariales construidos alrededor de tus procesos: ERP, CRM, facturación, inventario, logística y herramientas internas que ninguna solución genérica cubre.</p>
           <ul class="reveal d3 mt-8 space-y-4">
@@ -326,16 +364,16 @@
             <li class="flex gap-3"><Check></Check><span><b class="text-white">Migración de datos</b> <span class="text-gray-500">— sin perder tu historial.</span></span></li>
             <li class="flex gap-3"><Check></Check><span><b class="text-white">Seguridad y soporte</b> <span class="text-gray-500">— monitoreo, respaldos y mejoras continuas.</span></span></li>
           </ul>
-          <a href="#contacto" class="reveal d4 inline-block mt-9 accent-bg text-white font-semibold px-7 py-3.5 rounded-xl hover:scale-[1.03] transition">Agendar diagnóstico</a>
+          <a href="#contacto" class="reveal d4 inline-block mt-9 btn-metal px-7 py-3.5 rounded-lg">Agendar diagnóstico</a>
         </div>
       </div>
     </section>
 
     <!-- 6. PROCESO -->
-    <section id="proceso" class="panel" data-accent="67 56 202" data-accent2="59 130 246" data-title="Proceso">
+    <section id="proceso" class="panel" data-accent="70 95 180" data-accent2="150 180 245" data-title="Proceso">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8">
         <div class="text-center max-w-2xl mx-auto">
-          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">Cómo trabajamos</p>
+          <p class="reveal tag">Cómo trabajamos</p>
           <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Un proceso claro, <span class="accent-text">resultados medibles</span></h2>
         </div>
         <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -348,14 +386,14 @@
     </section>
 
     <!-- 7. CONTACTO + FOOTER -->
-    <section id="contacto" class="panel" data-accent="37 99 235" data-accent2="14 165 233" data-title="Contacto">
+    <section id="contacto" class="panel" data-accent="59 100 170" data-accent2="125 175 240" data-title="Contacto">
       <div class="mx-auto max-w-7xl w-full px-5 sm:px-8 grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <p class="reveal text-sm font-semibold tracking-widest uppercase accent-text">Contacto</p>
+          <p class="reveal tag">Contacto</p>
           <h2 class="reveal d1 font-display font-bold text-white text-3xl sm:text-5xl leading-tight mt-4">Construyamos <span class="accent-text">tu próximo producto</span></h2>
           <p class="reveal d2 mt-5 text-gray-400 text-lg max-w-md">Cuéntanos tu idea y te respondemos en menos de 24 horas con una propuesta inicial.</p>
           <div class="reveal d3 mt-8 space-y-3 text-gray-300 text-sm">
-            <p>📧 hola@answer.dev</p>
+            <p>📧 hola@ansoftw.com</p>
             <p>📱 +51 900 000 000</p>
             <p>📍 Lima, Perú · Trabajamos en remoto</p>
           </div>
@@ -363,31 +401,31 @@
         <form id="contactForm" class="reveal-x glass rounded-3xl p-6 sm:p-8 space-y-4" novalidate>
           <div class="grid sm:grid-cols-2 gap-4">
             <label class="block text-sm text-gray-400">Nombre
-              <input required name="nombre" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition" placeholder="Tu nombre" />
+              <input required name="nombre" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent2))] transition" placeholder="Tu nombre" />
             </label>
             <label class="block text-sm text-gray-400">Correo
-              <input required type="email" name="email" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition" placeholder="tu@empresa.com" />
+              <input required type="email" name="email" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent2))] transition" placeholder="tu@empresa.com" />
             </label>
           </div>
           <label class="block text-sm text-gray-400">Servicio de interés
-            <select name="servicio" class="mt-1.5 w-full rounded-xl bg-[#08163a] border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition">
+            <select name="servicio" class="mt-1.5 w-full rounded-xl bg-[#08163a] border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent2))] transition">
               <option>Microapps</option><option>Apps móviles</option><option>Apps web</option><option>Software a medida</option>
             </select>
           </label>
           <label class="block text-sm text-gray-400">Cuéntanos sobre tu proyecto
-            <textarea required name="mensaje" rows="4" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent))] transition" placeholder="¿Qué necesitas construir?"></textarea>
+            <textarea required name="mensaje" rows="4" class="mt-1.5 w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white outline-none focus:border-[rgb(var(--accent2))] transition" placeholder="¿Qué necesitas construir?"></textarea>
           </label>
-          <button class="w-full accent-bg text-white font-semibold py-3.5 rounded-xl hover:opacity-90 transition">Enviar mensaje</button>
+          <button class="w-full btn-metal py-3.5 rounded-lg">Enviar mensaje</button>
           <p id="formMsg" class="text-sm text-center min-h-5"></p>
         </form>
       </div>
-      <footer class="absolute bottom-4 inset-x-0 text-center text-xs text-gray-600">© <span id="year"></span> Answer. Todos los derechos reservados.</footer>
+      <footer class="absolute bottom-4 inset-x-0 flex items-center justify-center gap-3 text-xs text-gray-500"><svg class="logo h-6 w-auto" style="aspect-ratio:800/230" viewBox="0 0 800 230"><use href="#logo"/></svg><span>© <span id="year"></span> ANSOFTW. Todos los derechos reservados.</span></footer>
     </section>
   </main>
 
   <script>
     // Icono check reutilizable (reemplaza <check></check>)
-    const checkSVG = '<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--accent))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-opacity=".35"/><path d="m8 12 3 3 5-6"/></svg>';
+    const checkSVG = '<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--accent2))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-opacity=".35"/><path d="m8 12 3 3 5-6"/></svg>';
     document.querySelectorAll('check').forEach(el => el.outerHTML = checkSVG);
 
     const root = document.documentElement;
